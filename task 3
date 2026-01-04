@@ -1,0 +1,52 @@
+import java.util.*;
+
+public class Top10PurchasedProducts {
+
+    public static List<Map.Entry<String, Integer>> top10MostPurchased(List<String[]> salesData) {
+        Map<String, Integer> productSales = new HashMap<>();
+
+        for (int i = 0; i < salesData.size(); i++) { // loop
+            String[] record = salesData.get(i);
+
+            if (record == null || record.length < 2) continue;
+
+            String productName = (record[0] == null) ? "" : record[0].trim();
+            if (productName.isEmpty()) continue; // minor loop-structure change (skip empty name)
+
+            int quantitySold;
+            try {
+                quantitySold = Integer.parseInt(record[1].trim());
+            } catch (Exception e) {
+                continue;
+            }
+
+            if (quantitySold >= 1) { // minor if–else change (>= 1 instead of > 0)
+                productSales.put(productName, productSales.getOrDefault(productName, 0) + quantitySold);
+            } else {
+                // ignore faulty record (e.g., zero/negative quantity)
+                continue;
+            }
+        }
+
+        List<Map.Entry<String, Integer>> sorted = new ArrayList<>(productSales.entrySet());
+        sorted.sort((a, b) -> Integer.compare(b.getValue(), a.getValue()));
+
+        return sorted.subList(0, Math.min(10, sorted.size()));
+    }
+
+    public static void main(String[] args) {
+        List<String[]> salesData = Arrays.asList(
+                new String[]{"Product A", "12"},
+                new String[]{"Product B", "5"},
+                new String[]{"Product C", "-3"},  // ignored
+                new String[]{"Product A", "7"},
+                new String[]{"Product D", "20"}
+        );
+
+        List<Map.Entry<String, Integer>> top10 = top10MostPurchased(salesData);
+
+        for (Map.Entry<String, Integer> entry : top10) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
+    }
+}
