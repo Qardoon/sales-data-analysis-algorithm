@@ -1,0 +1,29 @@
+salesData = [
+    {"product_id": "A", "quantity_sold": 10},
+    {"product_id": "B", "quantity_sold": 5},
+    {"product_id": "A", "quantity_sold": 7},
+    {"product_id": "C", "quantity_sold": 12},
+    {"product_id": "B", "quantity_sold": 3},
+    {"product_id": "A", "quantity_sold": 0}, # This record will be ignored as quantity_sold is 0
+    {"product_id": "D", "quantity_sold": 8},
+    {"product_id": "C", "quantity_sold": 15}
+]
+
+productSales = {}
+
+for record in salesData:
+    if record["quantity_sold"] > 0:
+        if record["product_id"] in productSales:
+            productSales[record["product_id"]] += record["quantity_sold"]
+        else:
+            productSales[record["product_id"]] = record["quantity_sold"]
+
+maxSales = 0
+bestSellingProduct = None
+
+for product_id in productSales:
+    if productSales[product_id] > maxSales:
+        maxSales = productSales[product_id]
+        bestSellingProduct = product_id
+
+print(f"Best selling product: {bestSellingProduct}, Total sales: {maxSales}")
